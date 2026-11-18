@@ -45,7 +45,9 @@ Target roles are Senior/Lead Frontend, Full-Stack, AI-product, and Forward Deplo
 - Neon green is used for motion and small accents (hero caret, link and card hover states, globe pins, tier indicators). It is never the only carrier of meaning.
 - Under `prefers-reduced-motion`, everything is static and the green stays as a plain accent.
 - Theme tokens live as CSS variables, so a light theme can be added later without rewriting components.
-- Reference sites: to be added by Jitin (see §10).
+- Reference sites: beargrylls.com and abhishekjha.me. We keep their huge condensed uppercase headlines, small letter-spaced mono labels and a thin accent marquee of facts. We drop their photos, 3D and scroll effects.
+- Type: Bebas Neue for display headings, Geist Sans for body, Geist Mono for labels. All self-hosted through `next/font`.
+- The home page layout was first mocked in Google Stitch (slice 3). Only the layout and styling came from Stitch. All text comes from `content/`.
 
 ---
 
@@ -261,6 +263,8 @@ Rule: `components/islands/` is the only place `'use client'` may appear. An ESLi
 | 6   | Contact is `mailto:` plus LinkedIn. No form.                                                                        |
 | 7   | Dark mode: dark only. No toggle.                                                                                    |
 | 8   | Hosting: Vercel with Cloudflare DNS.                                                                                |
+| 9   | Home page proof tiles: 6 yrs, 30% and 20% (Spinny), LLM product (Sprinklr). Proof lives in `content/data/proof.ts`. |
+| 10  | No resume download until the phone-free export exists. `Common.pdf` is never served.                                |
 
 **Adopted recommendations that Jitin should still sanity-check**
 
@@ -270,7 +274,6 @@ Rule: `components/islands/` is the only place `'use client'` may appear. An ESLi
 
 **Still open**
 
-- Reference sites for the visual direction.
 - Headshot file.
 - Exact LinkedIn URL for the contact section. The resume gives `linkedin.com/in/lamba-jitin`.
 - Real numbers for the LLM Insights case study, if any exist.

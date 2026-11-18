@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bebas_Neue, Geist, Geist_Mono } from "next/font/google";
+import { site } from "@/content/data/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,17 +13,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const display = Bebas_Neue({
+  variable: "--font-bebas",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata: Metadata = {
-  title: "Jitin Lamba",
-  description:
-    "Frontend engineer who ships LLM products, growing into full stack.",
+  title: `${site.name} · Senior Software Engineer`,
+  description: site.headline,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
