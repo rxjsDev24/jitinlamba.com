@@ -45,7 +45,38 @@ test("lists every role", async ({ page }) => {
   }
 });
 
+test("contact headline assembles into readable letters once in view", async ({
+  page,
+}) => {
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const letters = page.locator("#contact-title .split-letter");
+  await expect(letters).toHaveCount(20);
+  await expect
+    .poll(() =>
+      letters.evaluateAll((els) =>
+        els.every((el) => {
+          const style = getComputedStyle(el);
+          return (
+            style.opacity === "1" && new DOMMatrix(style.transform).isIdentity
+          );
+        }),
+      ),
+    )
+    .toBe(true);
+});
+
+test.describe("with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("nothing animates", async ({ page }) => {
+    const running = await page.evaluate(() => document.getAnimations().length);
+    expect(running).toBe(0);
+  });
+});
+
 test("has no detectable accessibility violations", async ({ page }) => {
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(1500);
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();

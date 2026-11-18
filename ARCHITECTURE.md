@@ -44,6 +44,7 @@ Target roles are Senior/Lead Frontend, Full-Stack, AI-product, and Forward Deplo
 - Dark only. Black background, white text, neon green as the single accent.
 - Neon green is used for motion and small accents (hero caret, link and card hover states, globe pins, tier indicators). It is never the only carrier of meaning.
 - Under `prefers-reduced-motion`, everything is static and the green stays as a plain accent.
+- Motion vocabulary, all CSS in `app/globals.css` with no JavaScript: hero letters rise on load, a scroll progress bar, `.reveal` wipes sections up as they enter, `.draw` draws heading rules, the contact headline assembles from scattered letters as it scrolls in, and hover states on nav, skills, proof tiles and experience rows. Scroll-driven effects sit behind `@supports (animation-timeline: view())`, so browsers without it get the static page. Reveals use `clip-path`, not opacity, so text never renders at low contrast.
 - Theme tokens live as CSS variables, so a light theme can be added later without rewriting components.
 - Reference sites: beargrylls.com and abhishekjha.me. We keep their huge condensed uppercase headlines, small letter-spaced mono labels and a thin accent marquee of facts. We drop their photos, 3D and scroll effects.
 - Type: Bebas Neue for display headings, Geist Sans for body, Geist Mono for labels. All self-hosted through `next/font`.

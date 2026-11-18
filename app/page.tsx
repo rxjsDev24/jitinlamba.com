@@ -3,7 +3,9 @@ import { proof, tierBlurbs } from "@/content/data/proof";
 import { site } from "@/content/data/site";
 import { skills } from "@/content/data/skills";
 import { skillTiers } from "@/content/schemas";
+import { SplitLetters } from "@/components/split-letters";
 import { formatPeriod, splitHighlight } from "@/lib/format";
+import type { CSSProperties } from "react";
 
 const repoUrl = "https://github.com/rxjsDev24/jitinlamba.com";
 
@@ -19,6 +21,8 @@ const textLink = `underline decoration-accent decoration-1 underline-offset-[6px
 const label = "font-mono text-xs uppercase tracking-[0.2em] text-muted";
 const gutter = "mx-auto w-full max-w-6xl px-4 sm:px-8";
 
+const stagger = (i: number) => ({ "--i": i }) as CSSProperties;
+
 const marqueeItems = skills
   .filter((skill) => skill.tier === "production")
   .map((skill) => skill.name);
@@ -32,8 +36,9 @@ export default function Home() {
       >
         Skip to content
       </a>
+      <div aria-hidden className="scroll-progress" />
       <Header />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 overflow-x-clip">
         <Hero />
         <Marquee />
         <Proof />
@@ -66,7 +71,7 @@ function Header() {
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
-                  className={`text-muted transition-colors hover:text-foreground ${focusRing}`}
+                  className={`grow-line text-muted transition-colors hover:text-foreground ${focusRing}`}
                 >
                   {section.label}
                 </a>
@@ -96,7 +101,7 @@ function Hero() {
         id="hero-title"
         className="mt-6 font-display text-[clamp(4.5rem,17vw,13rem)] leading-[0.85] uppercase"
       >
-        {site.name}
+        <SplitLetters text={site.name} motion="rise" />
         <span
           aria-hidden
           className="caret ml-[0.05em] inline-block h-[0.72em] w-[0.12em] bg-accent"
@@ -132,7 +137,7 @@ function Marquee() {
     </ul>
   );
   return (
-    <div className="overflow-hidden bg-accent py-2 font-mono text-xs font-semibold uppercase tracking-[0.15em] text-black">
+    <div className="marquee-track overflow-hidden bg-accent py-2 font-mono text-xs font-semibold uppercase tracking-[0.15em] text-black">
       <h2 className="sr-only">Core stack</h2>
       <div className="marquee flex w-max">
         {run(false)}
@@ -149,16 +154,18 @@ function Proof() {
         Proof
       </h2>
       <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-px bg-line md:grid-cols-4">
-        {proof.map((item) => (
+        {proof.map((item, i) => (
           <li
             key={item.value}
-            className="bg-background px-4 py-8 sm:px-8 sm:py-12"
+            className="group bg-background px-4 py-8 sm:px-8 sm:py-12"
           >
-            <p className="font-display text-6xl leading-none uppercase sm:text-7xl">
-              {item.value}
-            </p>
-            <p className="mt-4 text-sm text-foreground">{item.label}</p>
-            <p className={`mt-2 ${label}`}>{item.source}</p>
+            <div style={stagger(i)} className="reveal">
+              <p className="font-display text-6xl leading-none uppercase transition-colors group-hover:text-accent sm:text-7xl">
+                {item.value}
+              </p>
+              <p className="mt-4 text-sm text-foreground">{item.label}</p>
+              <p className={`mt-2 ${label}`}>{item.source}</p>
+            </div>
           </li>
         ))}
       </ul>
@@ -176,11 +183,14 @@ function SectionHeading({
   title: string;
 }) {
   return (
-    <div className="flex items-baseline gap-4 border-b border-line pb-4">
-      <span className={label}>{index}</span>
-      <h2 id={id} className="font-display text-4xl uppercase sm:text-5xl">
-        {title}
-      </h2>
+    <div>
+      <div className="flex items-baseline gap-4 pb-4">
+        <span className={label}>{index}</span>
+        <h2 id={id} className="font-display text-4xl uppercase sm:text-5xl">
+          {title}
+        </h2>
+      </div>
+      <div aria-hidden className="draw h-px bg-muted/40" />
     </div>
   );
 }
@@ -194,8 +204,13 @@ function Skills() {
     >
       <SectionHeading id="skills-title" index="01" title="Skills" />
       <div className="mt-10 grid gap-12 md:grid-cols-3 md:gap-8">
-        {skillTiers.map((tier) => (
-          <div key={tier} data-tier={tier}>
+        {skillTiers.map((tier, i) => (
+          <div
+            key={tier}
+            data-tier={tier}
+            style={stagger(i)}
+            className="reveal"
+          >
             <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
               [{tier}]
             </h3>
@@ -206,11 +221,14 @@ function Skills() {
                 .map((skill) => (
                   <li
                     key={skill.name}
-                    className={
+                    className={`group w-fit ${
                       tier === "learning" ? "text-muted" : "text-foreground"
-                    }
+                    }`}
                   >
-                    <span aria-hidden className="mr-3 text-line">
+                    <span
+                      aria-hidden
+                      className="mr-3 inline-block text-line transition group-hover:translate-x-1 group-hover:text-accent"
+                    >
                       –
                     </span>
                     {skill.name}
@@ -236,9 +254,9 @@ function Experience() {
         {roles.map((role) => (
           <li
             key={role.company}
-            className="grid gap-6 border-b border-line py-10 md:grid-cols-[1fr_2fr] md:gap-12"
+            className="reveal row-bar grid gap-6 border-b border-line py-10 md:grid-cols-[1fr_2fr] md:gap-12"
           >
-            <div>
+            <div className="nudge">
               <h3 className="font-display text-4xl leading-none uppercase">
                 {role.company}
               </h3>
@@ -249,10 +267,10 @@ function Experience() {
               <p className={`mt-1 ${label}`}>{role.location}</p>
             </div>
             <ul className="space-y-4 text-sm leading-relaxed text-muted">
-              {role.highlights.map((highlight) => {
+              {role.highlights.map((highlight, i) => {
                 const { lead, body } = splitHighlight(highlight);
                 return (
-                  <li key={highlight}>
+                  <li key={highlight} style={stagger(i)} className="reveal">
                     {lead && <span className="text-foreground">{lead}. </span>}
                     {body}
                   </li>
@@ -278,15 +296,21 @@ function Contact() {
         id="contact-title"
         className="mt-6 font-display text-[clamp(3.5rem,11vw,9rem)] leading-[0.9] uppercase"
       >
-        Let’s build something.
+        <SplitLetters text="Let’s build something." motion="assemble" />
       </h2>
       <ul className="mt-10 flex flex-wrap items-baseline gap-x-10 gap-y-4">
         <li>
           <a
             href={`mailto:${site.email}`}
-            className={`font-mono text-xl sm:text-3xl ${textLink}`}
+            className={`group font-mono text-xl sm:text-3xl ${textLink}`}
           >
             {site.email}
+            <span
+              aria-hidden
+              className="ml-3 inline-block text-accent opacity-0 transition group-hover:translate-x-1 group-hover:opacity-100 group-focus-visible:opacity-100"
+            >
+              →
+            </span>
           </a>
         </li>
         <li>
